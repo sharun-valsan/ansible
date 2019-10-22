@@ -1,0 +1,14 @@
+---
+
+vcsa_host: 'FQDN/IP of VCSA'
+vcsa_user: 'lab\valsas'
+vcsa_password: 'Rocket#143'
+data_center: 'datacenter'
+host_cluster: 'ClusterName'
+host_datastore: 'datastore_name'
+vlan_tag: 'VLAN_tag'
+gate_way: 'gw_ip_addr'
+sub_net: 'netmask_value'
+dns_a: 'dns_ip'
+dns_b: 'dns_ip' # not mandatory
+ntp: 'ntp' # not mandatory
