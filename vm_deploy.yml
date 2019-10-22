@@ -1,0 +1,32 @@
+---
+- name: Deploy VxBlock Central Core
+  hosts: localhost
+
+  tasks:
+  - vmware_deploy_ovf:
+      hostname: "{{ vcsa_host }}"
+      username: "{{ vcsa_user }}"
+      password: "{{ vcsa_password }}"
+      datacenter: "{{ data_center }}"
+      cluster: "{{ host_cluster }}"
+      datastore: "{{ host_datastore }}"
+      disk_provisioning: 'thin'
+      folder: '/datacenter/vm/path/to/folder/'
+      name: 'VM_name'
+      networks:
+       "Network 1": "{{ vlan_tag }}"
+      validate_certs: no
+      power_on: true
+      wait: true
+      wait_for_ip_address: no
+      ovf: /path/to/ova/
+      properties:
+        vami.hostname: 'FQDN'
+        vami.ip0.vision: 'IP_address'
+        vami.gateway.vision: "{{ gate_way }}"
+        vami.netmask0.vision: "{{ sub_net }}"
+        vami.DNS.vision: "{{ dns_a }}"
+        vami.DNS2.vision: "{{ dns_b }}"
+        
+  vars_files:
+      - inventory.yml
