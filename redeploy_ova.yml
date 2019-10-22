@@ -1,0 +1,60 @@
+---
+- name: Gather VM UUID
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+  - name: Get VM UUID
+    vmware_guest_facts:
+      hostname: "{{ vsphere_host }}"
+      username: "{{ vsphere_user }}"
+      password: "{{ vsphere_password }}"
+      validate_certs: no
+      datacenter: 'datacenter_name'
+      folder: "/datacenter/vm/path/to/folder/"
+      name: 'name_of_guest_vm'
+    delegate_to: localhost
+    register: vm_facts
+
+  - set_fact: uuid="{{ vm_facts.instance.hw_product_uuid }}" # using UUID of the VM to identify it for removal.
+
+  - name: Delete Guest VM using UUID
+    vmware_guest:
+      hostname: "{{ vsphere_host }}"
+      username: "{{ vsphere_user }}"
+      password: "{{ vsphere_password }}"
+      validate_certs: no
+      uuid: "{{ uuid }}"
+      state: absent
+      force: yes
+    delegate_to: localhost
+    
+    - vmware_deploy_ovf:
+      hostname: "{{ vsphere_host }}"
+      username: "{{ vsphere_user }}"
+      password: "{{ vsphere_password }}"
+      datacenter: "{{ data_center }}"
+      cluster: "{{ host_cluster }}"
+      datastore: "{{ host_datastore }}"
+      disk_provisioning: 'thin'
+      folder: '/datacenter/vm/path/to/folder/'
+      name: 'name_of_guest_vm'
+      networks:
+       "Network 1": "{{ vlan_tag }}"
+      validate_certs: no
+      power_on: true
+      wait: true
+      wait_for_ip_address: no
+      ovf: /path/to/ovf  # ovf is kept within the ansible host for my use case.
+      properties:
+        vami.hostname: 'something.example.com' #FQDN
+        vami.ip0.vm: '192.168.1.1' #IP address of the VM
+        vami.gateway.vm: "{{ gate_way }}"
+        vami.netmask0.vm: "{{ sub_net }}"
+        vami.DNS.vm: "{{ dns_a }}"
+        vami.DNS2.vm: "{{ dns_b }}"
+
+  vars_files:
+      - inventory.yml
+# tip: inventory files are kept along with the playbook file, need to specify path otherwise.
+# to get VM properties, extract the .ova file and look for 'strings' in the .ovf file where ovf:userConfigurable="true".
