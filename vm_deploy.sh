@@ -8,4 +8,4 @@ read -p "Enter VM name: " vmname
 # ex -sc '15s/^/      /|x' vm_deploy.yml
 # ex -sc '24s/^/        /|x' vm_deploy.yml
 # ex -sc '25s/^/        /|x' vm_deploy.yml
-ansible-playbook -v vm_deploy.yml -e vami.hostname=${hostname} -e vami.ip0.vision=${ipaddress} -e name=${vmname} 
+ansible-playbook -v vm_deploy.yml -e vami.hostname="$hostname" -e vami.ip0.vision="$ipaddress" -e name="$vmname"
