@@ -1,9 +1,9 @@
 ---
-- hosts: machine
+- hosts: localhost
   become: true
   gather_facts: true
   tasks:
-
+# update necessary variables before using the playbook
    - name: Install aptitude using apt
      apt:
        name: aptitude
@@ -49,7 +49,7 @@
 
    - name: Add user to Docker group
      user:
-       name: student
+       name: user
        groups: docker
        append: yes
 
