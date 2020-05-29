@@ -11,7 +11,7 @@
       cluster: "{{ host_cluster }}"
       datastore: "{{ host_datastore }}"
       disk_provisioning: 'thin'
-      folder: '/Franklin/vm/SW-DEV/Sharun_DONOTDELETE/lab/'
+      folder: '/vcentername/vm/path/folder/lab/'
       name: "{{ vm_name }}"
       networks:
        "Network 1": "{{ vlan_tag }}"
