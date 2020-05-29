@@ -1,0 +1,35 @@
+---
+- name: Deploy VxBlock Central VM
+  hosts: localhost
+  tasks:
+  - name: Deploying VM from OVF file
+    vmware_deploy_ovf:   
+      hostname: "{{ vcsa_host }}"
+      username: "{{ vcsa_user }}"
+      password: "{{ vcsa_password }}"
+      datacenter: "{{ data_center }}"
+      cluster: "{{ host_cluster }}"
+      datastore: "{{ host_datastore }}"
+      disk_provisioning: 'thin'
+      folder: '/Franklin/vm/SW-DEV/Sharun_DONOTDELETE/lab/'
+      name: "{{ vm_name }}"
+      networks:
+       "Network 1": "{{ vlan_tag }}"
+      validate_certs: no
+      power_on: true
+      wait: true
+      wait_for_ip_address: no
+      ovf: "{{ ova_path }}"
+      properties:
+        vami.hostname: "{{ vami_hostname }}"
+        vami.ip0.vision: "{{ vami_ip_vision }}"
+        vami.gateway.vision: "{{ gate_way }}"
+        vami.netmask0.vision: "{{ sub_net }}"
+        vami.DNS.vision: "{{ dns_a }}"
+        vami.DNS2.vision: "{{ dns_b }}"
+        vision.eula.accepting_company_name: "{{ eula_lic }}"
+        vision.eula.licensee_company_name: "{{ eula_accep }}"
+        vision.eula.title: "{{ eula_title }}"
+        vision.eula.name: "{{ eula_name }}"
+  vars_files:
+      - inventory.yml

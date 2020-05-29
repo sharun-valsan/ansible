@@ -1,0 +1,22 @@
+---
+vcsa_host: 'vcenter_fqdn'
+vcsa_user: 'username'
+vcsa_password: 'Password'
+data_center: 'Franklin'
+host_cluster: 'Clusternmae'
+host_datastore: 'datastore_name'
+vlan_tag: 'vlan_tag'
+gate_way: 'gw_ip'
+sub_net: 'net_mask'
+dns_a: '8.8.8.8'
+dns_b: '8.8.4.4' # not mandatory
+ntp: '10.234.124.139' # not mandatory
+eula_name: 'Name'
+eula_title: 'DevOps'
+#eula_lic: ''
+#eula_accep: ''
+# dynamic variables
+vm_name: '' 
+vami_hostname: '' 
+vami_ip_vision: '' 
+ova_path: '' 

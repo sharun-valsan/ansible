@@ -1,8 +1,8 @@
 ---
 
 vcsa_host: 'FQDN/IP of VCSA'
-vcsa_user: 'lab\valsas'
-vcsa_password: 'Rocket#143'
+vcsa_user: 'username'
+vcsa_password: 'password'
 data_center: 'datacenter'
 host_cluster: 'ClusterName'
 host_datastore: 'datastore_name'
