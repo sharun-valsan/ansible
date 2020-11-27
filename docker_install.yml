@@ -53,7 +53,7 @@
        groups: docker
        append: yes
 
-   - name: Downloading docker-compose
+   - name: Downloading docker-compose binaries
      shell: sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 
    - name: Updating permission of downloaded file.
