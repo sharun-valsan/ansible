@@ -49,7 +49,7 @@
 
    - name: Add user to Docker group
      user:
-       name: student
+       name: student # Update 'student' to custom username
        groups: docker
        append: yes
 
