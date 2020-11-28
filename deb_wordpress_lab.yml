@@ -30,14 +30,14 @@
       login_password: ''
       name: root
       host: localhost
-      password: Apple@123
+      password: password
     tags:
      - mysqlsetup
      
   - name: Removing anonymous user for localhost
     mysql_user:
       login_user: root
-      login_password: Apple@123
+      login_password: Password
       name:
       host_all: yes
       state: absent
@@ -47,7 +47,7 @@
     mysql_db:
       login_host: localhost
       login_user: root
-      login_password: Apple@123
+      login_password: Password
       name: wordpress
       state: present
     tags: db_create
@@ -56,9 +56,9 @@
     mysql_user:
       login_host: localhost
       login_user: root
-      login_password: Apple@123
+      login_password: Password
       user: wordpress
-      password: Apple@123
+      password: Password
       priv: "wordpress:ALL,GRANT"
       state: present
     tags: wp_user
