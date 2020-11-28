@@ -1,0 +1,74 @@
+---
+- hosts: localhost
+  gather_facts: false
+  become: true
+  tasks:
+  - name: Installing packages required for setting up wordpress
+    apt:
+      name: '{{ item }}'
+      state: latest
+    with_items:
+     - apache2
+     - mysql-server
+     - mysql-client
+     - php
+     - python-mysqldb
+    tags: pkginstall
+
+  - name: Downloading Wordpress bundle
+    unarchive:
+      src: https://wordpress.org/latest.tar.gz
+      dest: /tmp
+      remote_src: yes
+
+  - name: Setting up wordpress
+    shell: rsync -r /tmp/wordpress/* /var/www/html/
+
+  - name: Setting up MySQL database
+    mysql_user:
+      login_user: root
+      login_password: ''
+      name: root
+      host: localhost
+      password: Apple@123
+    tags:
+     - mysqlsetup
+     
+  - name: Removing anonymous user for localhost
+    mysql_user:
+      login_user: root
+      login_password: Apple@123
+      name:
+      host_all: yes
+      state: absent
+    tags: anonymous
+   
+  - name: Creating new database for wordpress
+    mysql_db:
+      login_host: localhost
+      login_user: root
+      login_password: Apple@123
+      name: wordpress
+      state: present
+    tags: db_create
+
+  - name: Creating user for wordpress
+    mysql_user:
+      login_host: localhost
+      login_user: root
+      login_password: Apple@123
+      user: wordpress
+      password: Apple@123
+      priv: "wordpress:ALL,GRANT"
+      state: present
+    tags: wp_user
+
+  - name: Starting and enabling services
+    service:
+      name: '{{ item }}'
+      state: started
+      enabled: yes
+    with_items:
+     - apache2
+     - mysql
+    tags: service_restart
