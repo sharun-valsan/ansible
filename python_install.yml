@@ -2,7 +2,7 @@
 - hosts: all
 #  become: yes
   tasks:
-   - name: Install Python 3.7 on Centos
+   - name: Install Python 3 on Centos
      become: true
      yum:
        name: python3
@@ -15,7 +15,7 @@
      - Gather package facts
      - Installation status CentOS Ubuntu
 
-   - name: Install Python 3.7 on Ubuntu
+   - name: Install Python 3 on Ubuntu
      become: true
      apt:
        name: python3
@@ -34,7 +34,7 @@
        dest: C:\Users\admin\Desktop\
      when: inventory_hostname in groups['windows']
 
-   - name: Install Python3.7 from Desktop
+   - name: Install Python3 from Desktop
      win_package:
        path: C:\Users\admin\Desktop\python-3.7.0-amd64.exe
        state: present
