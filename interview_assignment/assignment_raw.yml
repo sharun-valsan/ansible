@@ -1,0 +1,111 @@
+---
+- hosts: all
+#  become: yes
+  tasks:
+   - name: Install Python 3.7 on Centos
+     become: true
+     yum:
+       name: python3
+       state: present
+     when: inventory_hostname in groups['centos']
+     register: task_result0
+     notify:
+     - Reboot machine
+     - Wait for the reboot to complete
+     - Gather package facts
+     - Installation status CentOS Ubuntu
+
+   - name: debug task_result
+     debug: var=task_result0
+     
+
+   - name: Install Python 3.7 on Ubuntu
+     become: true
+     apt:
+       name: python3
+       state: present
+     when: inventory_hostname in groups['ubuntu']
+     register: task_result
+     notify:
+     - Reboot machine
+     - Wait for the reboot to complete
+     - Gather package facts
+     - Installation status CentOS Ubuntu
+
+   - name: debug task_result
+     debug: var=task_result
+
+   - name: Copy Python3 to user desktop
+     win_copy:
+       src: /home/student/python-3.7.0-amd64.exe
+       dest: C:\Users\admin\Desktop\
+     when: inventory_hostname in groups['windows']
+
+   - name: Install Python3.7 from Desktop
+     win_package:
+       path: C:\Users\admin\Desktop\python-3.7.0-amd64.exe
+       state: present
+       product_id: '{D6BDDB48-938A-4384-A7BE-2B4E4931B111}'
+       arguments: /S
+     register: win_result
+     notify: 
+     - Reboot Windows
+     - check for installation
+     - debug installation
+     when: inventory_hostname in groups['windows']
+
+   - name: debug win_result
+     debug: var=win_result
+
+#  Post reboot play
+  handlers:
+    - name: Reboot machine
+      become: true
+      shell: "sleep 5 && reboot"
+      async: 1
+      poll: 0
+      when: task_result is changed or task_result0 is changed
+
+    - name: check for installation
+      win_package:
+        product_id: '{D6BDDB48-938A-4384-A7BE-2B4E4931B111}'
+        state: present
+        path: C:\Users\admin\Desktop\python-3.7.0-amd64.exe
+        arguments: /passive
+      register: installation
+
+    - name: debug installation
+      debug:
+        msg: "Python3.7 available"
+      when: installation is not changed      
+
+    - name: Wait for the reboot to complete
+      wait_for_connection:
+        host: '{{ inventory_hostname }}'
+        connect_timeout: 40
+        sleep: 5
+        delay: 5
+        timeout: 300
+      when: task_result is changed or task_result0 is changed
+
+    - name: Python install result
+      debug:
+        msg: "Python3 installed"
+      when: "'Python3' in ansible_facts.packages"
+
+    - name: Reboot Windows
+      win_reboot:
+        pre_reboot_delay: 5
+        reboot_timeout: 900
+      register: reboot
+      when: win_result is changed
+
+    - name: Gather package facts
+      package_facts:
+        manager: auto        
+
+    - name: Installation status CentOS Ubuntu
+      debug:
+        msg: "{{ ansible_facts.packages['python3'] }}"
+      when: "'python3' in ansible_facts.packages"
+
