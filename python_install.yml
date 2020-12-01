@@ -1,6 +1,7 @@
 ---
 - hosts: all
-#  become: yes
+# This playbook install python3 on CentOS, Ubuntu and Windows hosts and restarts them and checks for package availability post restart of the nodes.
+# Written as part of a technical interview assignment.
   tasks:
    - name: Install Python 3 on Centos
      become: true
